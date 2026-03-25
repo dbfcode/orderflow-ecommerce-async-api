@@ -22,7 +22,7 @@ Documentation will be added as the project evolves.
 
 ## 👥 Contributors
 
-- Diego Ferreira – messaging layer, checkout, infrastructure
+- Diego Ferreira – messaging layer, checkout, infrastructure and caching
 - Giovanna Caxias – products, categories, cart, authentication
 
 ---
