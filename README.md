@@ -8,7 +8,7 @@ Project in development.
 
 ## 🛠️ Tech Stack
 
-- Java 17
+- Java 21
 - Spring Boot 3
 - PostgreSQL
 - Spring Security + JWT
