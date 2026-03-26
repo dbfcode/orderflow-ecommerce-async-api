@@ -6,7 +6,8 @@ import lombok.*;
 @Entity
 @Table(name = "tb_category")
 @Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Category {
 

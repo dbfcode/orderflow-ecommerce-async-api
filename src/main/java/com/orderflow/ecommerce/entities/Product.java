@@ -7,7 +7,8 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "tb_product")
 @Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Product {
 
