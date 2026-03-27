@@ -40,8 +40,12 @@ public class CategoryController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody Category obj) {
-        Category entity = repository.findById(id).get();
-        entity.setName(obj.getName());
-        return ResponseEntity.ok().body(repository.save(entity));
+        return repository.findById(id)
+                .map(entity -> {
+                    entity.setName(obj.getName());
+                    Category updated = repository.save(entity);
+                    return ResponseEntity.ok().body(updated);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }
