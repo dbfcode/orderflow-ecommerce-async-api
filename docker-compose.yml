@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: orderflow-postgres
+    environment:
+      POSTGRES_DB: orderflow
+      POSTGRES_USER: orderflow
+      POSTGRES_PASSWORD: orderflow123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - orderflow-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orderflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: orderflow-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: orderflow
+      RABBITMQ_DEFAULT_PASS: orderflow123
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - orderflow-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: orderflow-app
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/orderflow
+      SPRING_DATASOURCE_USERNAME: orderflow
+      SPRING_DATASOURCE_PASSWORD: orderflow123
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: orderflow
+      SPRING_RABBITMQ_PASSWORD: orderflow123
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app/src          # <-- código fonte sincronizado
+      - ./pom.xml:/app/pom.xml  # <-- pom sincronizado
+      - maven-repo:/root/.m2    # <-- cache das dependências
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - orderflow-network
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  maven-repo:
+
+networks:
+  orderflow-network:
+    driver: bridge
