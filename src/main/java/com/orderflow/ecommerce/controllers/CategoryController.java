@@ -22,6 +22,8 @@ public class CategoryController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Category> findById(@PathVariable Long id) {
+
+
         return repository.findById(id)
                 .map(obj -> ResponseEntity.ok().body(obj))
                 .orElse(ResponseEntity.notFound().build());

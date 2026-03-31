@@ -46,6 +46,8 @@ public class ProductController {
         entity.setPrice(obj.getPrice());
         entity.setStockQuantity(obj.getStockQuantity());
         entity.setCategory(obj.getCategory());
+        System.out.println("aavavvvv");
         return ResponseEntity.ok().body(repository.save(entity));
+
     }
 }

@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: orderflow
       POSTGRES_USER: orderflow
       POSTGRES_PASSWORD: orderflow123
+      SPRING_DEVTOOLS_RESTART_POLL_INTERVAL: "2000"
+      SPRING_DEVTOOLS_RESTART_QUIET_PERIOD: "1000"
     ports:
       - "5432:5432"
     volumes:
@@ -53,12 +55,18 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: orderflow
       SPRING_RABBITMQ_PASSWORD: orderflow123
+      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
+      SPRING_DEVTOOLS_LIVERELOAD_ENABLED: "true"
+      # Debug apenas no processo filho (fork do spring-boot:run)
+      MAVEN_OPTS: "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     ports:
       - "8080:8080"
+      - "5005:5005"
     volumes:
-      - ./src:/app/src          # <-- código fonte sincronizado
-      - ./pom.xml:/app/pom.xml  # <-- pom sincronizado
-      - maven-repo:/root/.m2    # <-- cache das dependências
+      - ./src:/app/src
+      - ./target:/app/target
+      - ./pom.xml:/app/pom.xml
+      - maven-repo:/root/.m2
     depends_on:
       postgres:
         condition: service_healthy
@@ -66,6 +74,7 @@ services:
         condition: service_healthy
     networks:
       - orderflow-network
+    restart: on-failure:3  # Limita tentativas, não loop infinito
 
 volumes:
   postgres_data:
