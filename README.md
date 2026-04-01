@@ -6,6 +6,7 @@
 ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.13-orange.svg)
 ![Redis](https://img.shields.io/badge/Redis-7.2-red.svg)
 ![Docker](https://img.shields.io/badge/Docker-27.3-blue.svg)
+
 OrderFlow Commerce is an event-driven e-commerce REST API built with Java 21 and Spring Boot.
 
 It simulates a real-world microservices architecture by processing orders asynchronously using RabbitMQ.
@@ -49,6 +50,7 @@ Consumers process the event asynchronously:
 Inventory consumer reserves items (simulated)
 Email consumer sends a confirmation email
 This decouples order creation from time-consuming operations, improving responsiveness and scalability.
+
 ![Architecture Diagram](docs/architecture.png)
 > Diagram will be added soon
 ---
@@ -101,10 +103,10 @@ Postman collection is available in `/docs`.
 
 ### Contributors
 
-Name	Role	Contributions
-Diego Ferreira	Advanced Developer	RabbitMQ, checkout, Docker, Redis, resilience
-Giovanna Caxias	Junior Developer	CRUD, JWT auth, cart, Swagger
-
+| Name            | Role               | Contributions                          |
+|-----------------|--------------------|----------------------------------------|
+| Diego Ferreira  | Advanced Developer | RabbitMQ, checkout, Docker, Redis, resilience |
+| Giovanna Caxias | Junior Developer   | CRUD, JWT auth, cart, Swagger          |
 ---
 
 ### License
