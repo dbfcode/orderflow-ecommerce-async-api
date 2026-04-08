@@ -27,7 +27,4 @@ public class Product {
 
     private Integer stockQuantity;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
@@ -32,4 +33,7 @@ public class Cart implements Serializable {
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<CartItem> items = new ArrayList<>();
+
+    @Column(name = "user_id")
+    private Long userId;
 }

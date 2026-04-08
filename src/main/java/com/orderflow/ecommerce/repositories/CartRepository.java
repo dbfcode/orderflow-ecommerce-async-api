@@ -1,9 +1,12 @@
 package com.orderflow.ecommerce.repositories;
 
-import com.orderflow.ecommerce.entities.CartItem;
+import com.orderflow.ecommerce.entities.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.Optional; // <--- Importante ter esse import!
 
-@Repository
-public interface CartRepository extends JpaRepository<CartItem, Long> {
+public interface CartRepository extends JpaRepository<Cart, Long> {
+
+    Optional<Cart> findByUserId(Long userId);
+
+    void deleteByUserId(Long userId);
 }
