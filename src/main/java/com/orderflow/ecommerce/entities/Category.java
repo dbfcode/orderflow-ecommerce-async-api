@@ -1,6 +1,8 @@
 package com.orderflow.ecommerce.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 @Entity
@@ -16,5 +18,7 @@ public class Category {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "O nome da categoria é obrigatório")
+    @Pattern(regexp = "^[a-zA-ZÀ-ÿ ]+$", message = "O nome deve conter apenas letras")
     private String name;
 }

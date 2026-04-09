@@ -2,11 +2,13 @@ package com.orderflow.ecommerce.controllers;
 
 import com.orderflow.ecommerce.entities.Category;
 import com.orderflow.ecommerce.repositories.CategoryRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(value = "/categories")
@@ -22,15 +24,13 @@ public class CategoryController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Category> findById(@PathVariable Long id) {
-
-
-        return repository.findById(id)
-                .map(obj -> ResponseEntity.ok().body(obj))
-                .orElse(ResponseEntity.notFound().build());
+        Category obj = repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Categoria não encontrada com o ID: " + id));
+        return ResponseEntity.ok().body(obj);
     }
 
     @PostMapping
-    public ResponseEntity<Category> insert(@RequestBody Category obj) {
+    public ResponseEntity<Category> insert(@Valid @RequestBody Category obj) {
         return ResponseEntity.ok().body(repository.save(obj));
     }
 
@@ -41,13 +41,11 @@ public class CategoryController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody Category obj) {
-        return repository.findById(id)
-                .map(entity -> {
-                    entity.setName(obj.getName());
-                    Category updated = repository.save(entity);
-                    return ResponseEntity.ok().body(updated);
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Category> update(@PathVariable Long id, @Valid @RequestBody Category obj) {
+        Category entity = repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Categoria não encontrada para atualizar"));
+
+        entity.setName(obj.getName());
+        return ResponseEntity.ok().body(repository.save(entity));
     }
 }
