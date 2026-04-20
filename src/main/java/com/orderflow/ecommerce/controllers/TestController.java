@@ -37,7 +37,7 @@ public class TestController {
     }
 
     /**
-     * Publica um evento de exemplo no RabbitMQ (para testar filas e consumers sem fluxo de pedido real).
+     * Publishes a sample event to RabbitMQ (to test queues and consumers without a real order flow).
      */
     @GetMapping("/publish-sample-order")
     public Map<String, Object> publishSampleOrder() {
@@ -68,7 +68,7 @@ public class TestController {
     }
 
     /**
-     * Lê um valor inicial opcional e cai para DEFAULT_START_ORDER_ID em caso de ausência/valor inválido.
+     * Reads an optional initial value and falls back to DEFAULT_START_ORDER_ID when missing or invalid.
      */
     private long resolveInitialOrderId() {
         String configured = System.getProperty("orderflow.sample-order.start-id");
@@ -84,7 +84,7 @@ public class TestController {
     }
 
     private long resolveFallbackOrderId() {
-        // Fallback simples para garantir um id positivo mesmo em cenários extremos.
+        // Simple fallback to guarantee a positive id in edge scenarios.
         long fallback = Math.abs(System.currentTimeMillis());
         return fallback == 0 ? DEFAULT_START_ORDER_ID : fallback;
     }

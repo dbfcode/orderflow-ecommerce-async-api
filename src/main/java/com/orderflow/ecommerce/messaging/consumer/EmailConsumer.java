@@ -14,6 +14,6 @@ public class EmailConsumer {
     @RabbitListener(queues = "${orderflow.rabbitmq.queue-email}")
     public void onOrderCreated(OrderCreatedEvent event) {
         log.info("Email: preparing notification for orderId={} status={}", event.orderId(), event.status());
-        // Enfileirar envio de e-mail quando houver serviço de notificação
+        // Queue email sending when a notification service is available
     }
 }
