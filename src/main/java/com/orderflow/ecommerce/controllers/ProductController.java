@@ -2,11 +2,13 @@ package com.orderflow.ecommerce.controllers;
 
 import com.orderflow.ecommerce.entities.Product;
 import com.orderflow.ecommerce.repositories.ProductRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(value = "/products")
@@ -22,13 +24,13 @@ public class ProductController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Product> findById(@PathVariable Long id) {
-        return repository.findById(id)
-                .map(obj -> ResponseEntity.ok().body(obj))
-                .orElse(ResponseEntity.notFound().build());
+        Product obj = repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Produto não encontrado"));
+        return ResponseEntity.ok().body(obj);
     }
 
     @PostMapping
-    public ResponseEntity<Product> insert(@RequestBody Product obj) {
+    public ResponseEntity<Product> insert(@Valid @RequestBody Product obj) {
         return ResponseEntity.ok().body(repository.save(obj));
     }
 
@@ -39,15 +41,16 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product obj) {
-        Product entity = repository.findById(id).get();
+    public ResponseEntity<Product> update(@PathVariable Long id, @Valid @RequestBody Product obj) {
+        Product entity = repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Produto não encontrado para atualizar"));
+
         entity.setName(obj.getName());
         entity.setDescription(obj.getDescription());
         entity.setPrice(obj.getPrice());
         entity.setStockQuantity(obj.getStockQuantity());
         entity.setCategory(obj.getCategory());
-        System.out.println("aavavvvv");
-        return ResponseEntity.ok().body(repository.save(entity));
 
+        return ResponseEntity.ok().body(repository.save(entity));
     }
 }
