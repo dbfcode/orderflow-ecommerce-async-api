@@ -9,7 +9,10 @@ class OrderTest {
 
     @Test
     void shouldCalculateTotalCorrectly() {
-        Product product = new Product(null, "Camiseta", null, BigDecimal.valueOf(49.90), 10, null);
+        Product product = new Product();
+        product.setName("Camiseta");
+        product.setPrice(BigDecimal.valueOf(49.90));
+        product.setStockQuantity(10);
         OrderItem item = new OrderItem(product, 2, product.getPrice());
         Order order = new Order(List.of(item));
         assertEquals(BigDecimal.valueOf(99.80), order.getTotal());
