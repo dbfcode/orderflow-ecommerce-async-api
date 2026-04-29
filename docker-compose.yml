@@ -76,6 +76,22 @@ services:
       - orderflow-network
     restart: on-failure:3  # Limita tentativas, não loop infinito
 
+  web:
+    build:
+      context: ../orderflow-web
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api
+    container_name: orderflow-web
+    ports:
+      - "4173:80"
+    depends_on:
+      app:
+        condition: service_started
+    networks:
+      - orderflow-network
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   rabbitmq_data:
