@@ -43,7 +43,7 @@ services:
 
   app:
     build:
-      context: .
+      context: ./api
       dockerfile: Dockerfile
     container_name: orderflow-app
     environment:
@@ -63,9 +63,9 @@ services:
       - "8080:8080"
       - "5005:5005"
     volumes:
-      - ./src:/app/src
-      - ./target:/app/target
-      - ./pom.xml:/app/pom.xml
+      - ./api/src:/app/src
+      - ./api/target:/app/target
+      - ./api/pom.xml:/app/pom.xml
       - maven-repo:/root/.m2
     depends_on:
       postgres:
@@ -78,7 +78,7 @@ services:
 
   web:
     build:
-      context: ../orderflow-web
+      context: ./web
       dockerfile: Dockerfile
       args:
         VITE_API_BASE_URL: /api

@@ -4,7 +4,7 @@
 
 Evoluir o monolito atual para microsservicos com desenvolvimento local via Docker, mantendo:
 
-- Multi-repo (um repositorio por servico)
+- Organizacao atual: **monorepo** com `api/` (Spring Boot) e `web/` (frontend) neste repositorio; extracao futura pode voltar a **multi-repo** (um repositorio por servico) conforme as fases abaixo
 - Banco PostgreSQL unico compartilhado
 - Isolamento por schema/tabela (ownership por servico)
 - Integracao assincorna via RabbitMQ
@@ -14,7 +14,7 @@ Evoluir o monolito atual para microsservicos com desenvolvimento local via Docke
 - API monolitica Spring Boot com CRUD de catalogo.
 - Publicacao de evento `OrderCreated` ja existente.
 - Consumers de inventario e notificacao ainda no mesmo processo.
-- Docker Compose local ja sobe app + Postgres + RabbitMQ.
+- Docker Compose na raiz do monorepo sobe app + web + Postgres + RabbitMQ.
 
 ## Alvo arquitetural
 
@@ -59,7 +59,7 @@ Regras:
 
 ## Docker dev local (conceito)
 
-O repositorio `orderflow-local-dev` centraliza:
+Hoje o `docker-compose.yml` na **raiz deste monorepo** sobe Postgres, RabbitMQ, API e web. No alvo multi-repo, um repositorio `orderflow-local-dev` pode centralizar:
 
 - `docker-compose.yml` para todos os servicos
 - `postgres` e `rabbitmq`
