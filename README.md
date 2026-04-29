@@ -53,6 +53,20 @@ This decouples order creation from time-consuming operations, improving responsi
 
 ![Architecture Diagram](docs/architecture.png)
 > Diagram will be added soon
+
+### Microservices Migration (In Progress)
+
+The project is being prepared for multi-repo microservices architecture while keeping a single shared PostgreSQL instance.
+
+- Isolation strategy: ownership by schema/table per service
+- Integration strategy: API + RabbitMQ events (no direct cross-service joins)
+- Local orchestration strategy: dedicated `orderflow-local-dev` repository with Docker Compose
+
+Detailed plan and governance:
+
+- [`docs/microservices-migration.md`](docs/microservices-migration.md)
+- [`docs/local-dev-shared-db.md`](docs/local-dev-shared-db.md)
+- [`docs/sql/init-schemas.sql`](docs/sql/init-schemas.sql)
 ---
 ### How to Run (Development)
 
