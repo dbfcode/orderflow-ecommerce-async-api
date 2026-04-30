@@ -1,4 +1,5 @@
 # Monorepo — frontend e API
+<img width="1536" height="1024" alt="ChatGPT Image 30 de abr  de 2026, 13_52_47 (1)" src="https://github.com/user-attachments/assets/55231973-4991-4e35-95c3-aac612f0bcbc" />
 
 Este repositório contém:
 
