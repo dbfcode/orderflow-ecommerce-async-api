@@ -90,7 +90,8 @@ PostgreSQL → 5432
 RabbitMQ → 5672 (AMQP), 15672 (UI)
 Spring Boot → 8080
 3. Access the services
-Swagger UI: http://localhost:8080/swagger-ui.html
+Swagger UI: http://localhost:8080/swagger-ui.html (redirects to `/swagger-ui/index.html`)  
+OpenAPI JSON: http://localhost:8080/v3/api-docs
 RabbitMQ: http://localhost:15672  
 user: orderflow  
 password: orderflow123
@@ -110,7 +111,7 @@ docker-compose down
 
 ### API Documentation
 
-Access Swagger UI after starting the application.  
+After starting the application, open the Swagger UI at `http://localhost:8080/swagger-ui.html`. The OpenAPI 3 specification is served at `http://localhost:8080/v3/api-docs`.  
 Postman collection is available in `/docs`.
 
 ---

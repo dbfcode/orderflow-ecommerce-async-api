@@ -1,9 +1,18 @@
 package com.orderflow.ecommerce.controllers;
 
+import com.orderflow.ecommerce.dtos.ErrorResponse;
 import com.orderflow.ecommerce.dtos.OrderItemDto;
+import com.orderflow.ecommerce.dtos.PingResponse;
+import com.orderflow.ecommerce.dtos.PublishSampleOrderResponse;
 import com.orderflow.ecommerce.entities.enums.OrderStatus;
 import com.orderflow.ecommerce.messaging.events.OrderCreatedEvent;
 import com.orderflow.ecommerce.messaging.publisher.OrderEventPublisher;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,11 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/test")
+@Tag(name = "Testes e integração", description = "Endpoints auxiliares para health check e publicação de eventos de exemplo no RabbitMQ")
 public class TestController {
 
     private static final long DEFAULT_START_ORDER_ID = 1000L;
@@ -27,20 +36,29 @@ public class TestController {
     }
 
     @GetMapping("/ping")
-    public Map<String, Object> ping() {
-
-        return Map.of(
-                "status", "ok",
-                "message", "versão 1.",
-                "timestamp", LocalDateTime.now().toString()
+    @Operation(summary = "Verifica se a API está respondendo")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "API ativa",
+                    content = @Content(schema = @Schema(implementation = PingResponse.class)))
+    })
+    public PingResponse ping() {
+        return new PingResponse(
+                "ok",
+                "versão 1.",
+                LocalDateTime.now().toString()
         );
     }
 
-    /**
-     * Publishes a sample event to RabbitMQ (to test queues and consumers without a real order flow).
-     */
     @GetMapping("/publish-sample-order")
-    public Map<String, Object> publishSampleOrder() {
+    @Operation(summary = "Publica um evento OrderCreated de exemplo no RabbitMQ",
+            description = "Útil para validar filas e consumidores (EmailConsumer, InventoryConsumer) sem fluxo real de pedido.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Evento enfileirado",
+                    content = @Content(schema = @Schema(implementation = PublishSampleOrderResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno ao publicar",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    public PublishSampleOrderResponse publishSampleOrder() {
         long nextOrderId = nextSampleOrderId();
         var event = new OrderCreatedEvent(
                 nextOrderId,
@@ -50,10 +68,10 @@ public class TestController {
                 List.of(new OrderItemDto(1L, "Produto teste", 1, new BigDecimal("42.00"), new BigDecimal("42.00")))
         );
         orderEventPublisher.publishOrderCreated(event);
-        return Map.of(
-                "published", true,
-                "orderId", event.orderId(),
-                "hint", "Vê os logs: EmailConsumer e InventoryConsumer devem registar uma linha cada."
+        return new PublishSampleOrderResponse(
+                true,
+                event.orderId(),
+                "Vê os logs: EmailConsumer e InventoryConsumer devem registar uma linha cada."
         );
     }
 
@@ -84,7 +102,6 @@ public class TestController {
     }
 
     private long resolveFallbackOrderId() {
-        // Simple fallback to guarantee a positive id in edge scenarios.
         long fallback = Math.abs(System.currentTimeMillis());
         return fallback == 0 ? DEFAULT_START_ORDER_ID : fallback;
     }
