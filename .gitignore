@@ -49,3 +49,6 @@ api/.vscode/
 
 ### Mac OS ###
 .DS_Store
+
+### Cursor IDE ###
+.cursor/
