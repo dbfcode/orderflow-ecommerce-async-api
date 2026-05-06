@@ -9,6 +9,7 @@ web/npm-debug.log*
 web/.vite/
 
 # --- API (Maven / Java) ---
+/target/
 api/target/
 !api/.mvn/wrapper/maven-wrapper.jar
 !api/**/src/main/**/target/
@@ -48,3 +49,6 @@ api/.vscode/
 
 ### Mac OS ###
 .DS_Store
+
+### Cursor IDE ###
+.cursor/
